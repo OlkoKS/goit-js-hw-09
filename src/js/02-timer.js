@@ -13,7 +13,7 @@ const refs = {
 
 const { inputEl, buttonEl, daysEl, hoursEl, minutesEl, secondsEl } = refs;
 
-buttonEl.setAttribute('disabled', true);
+buttonEl.disabled = true;
 
 const options = {
     enableTime: true,
@@ -23,12 +23,14 @@ const options = {
     onClose(selectedDates) {
         const selectedTimeId = selectedDates[0].getTime();
         localStorage.setItem('userTime', selectedTimeId);
+        buttonEl.disabled = false;
         
         if (selectedDates[0] < options.defaultDate) {
+            buttonEl.disabled = true;
             Notify.failure('Please choose a date in the future');
+            
         }
-
-        buttonEl.removeAttribute('disabled');
+        
         buttonEl.addEventListener('click', onStart);
     },
 };
@@ -36,7 +38,16 @@ const options = {
 flatpickr(inputEl, options);
 
 function onStart() {
+    
+    buttonEl.disabled = true;
+
+    /* ------------------------------------- */
+    inputEl.disabled = true;
+    /* ------------------------------------- */
+    
     const timerId = setInterval(() => {
+        
+        
         const currentTimeId = new Date().getTime();
         const userTimeId = localStorage.getItem('userTime');
         let differenceTime = userTimeId - currentTimeId;
@@ -48,8 +59,9 @@ function onStart() {
         minutesEl.textContent = addLeadingZero(minutes);
         secondsEl.textContent = addLeadingZero(seconds);
 
-        if (differenceTime === 0) {
+        if (differenceTime <= 1000) {
             clearInterval(timerId);
+            Notify.success('FINISHED!');
         }
     }, 1000)
 }
