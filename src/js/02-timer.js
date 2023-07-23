@@ -28,7 +28,6 @@ const options = {
         if (selectedDates[0] < options.defaultDate) {
             buttonEl.disabled = true;
             Notify.failure('Please choose a date in the future');
-            
         }
         
         buttonEl.addEventListener('click', onStart);
@@ -38,15 +37,11 @@ const options = {
 flatpickr(inputEl, options);
 
 function onStart() {
-    
-    buttonEl.disabled = true;
 
-    /* ------------------------------------- */
+    buttonEl.disabled = true;
     inputEl.disabled = true;
-    /* ------------------------------------- */
-    
+
     const timerId = setInterval(() => {
-        
         
         const currentTimeId = new Date().getTime();
         const userTimeId = localStorage.getItem('userTime');
